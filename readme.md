@@ -1,38 +1,88 @@
-## Express Backend Boilerplate
+# ToolEasier API Endpoints
 
-- This repository serves as a boilerplate for developing a robust backend. You can speed up your backend development by using this repository.
+## User Module
 
-### Guidelines for use
+- **POST** `/api/users`
 
-- Visit [this link](https://github.com/enayetsyl/backend-boilerplate) to download the code. 
+  - **Input**: `{ email: string, password: string, role?: string }`
+  - **Output**: User object
+  - **Description**: Creates a new user
 
-- Alternatively, you can clone the project using the following command: 
+- **GET** `/api/users`
 
-```javascript
-git clone https://github.com/enayetsyl/backend-boilerplate.git
-```
+  - **Output**: Array of users
+  - **Description**: Retrieves all users
 
-- After downloading or cloning the project, open it in VS Code. Open the terminal and run the following command:
+- **GET** `/api/users/:id`
 
-```javascript
-npm i
-```
+  - **Output**: User object
+  - **Description**: Retrieves user by ID
 
-- In the ".env" file, add your MongoDB URI in the `database_url`. 
+- **PATCH** `/api/users/:id`
 
-- Run following command in the terminal to start the project
+  - **Input**: `{ email?: string, role?: string, status?: string }`
+  - **Output**: Updated user object
+  - **Description**: Updates user information
 
-```javascript
-npm run start:dev
-```
+- **DELETE** `/api/users/:id`
 
-- Open your browser and navigate to localhost:5000 to check whether the app is working properly. 
+  - **Output**: Deleted user object
+  - **Description**: Soft deletes a user
 
-- Inside each file, there are comments for your guidance. Some comments explain the purpose of the code and provide supporting reading materials. 
+- **PATCH** `/api/users/:id/status`
 
-- In some files, comments with "TODO" indicate what you need to change if you want to use it for your project. Read them carefully. 
+  - **Input**: `{ status: string }`
+  - **Output**: Updated user object
+  - **Description**: Changes user status
 
-- This boilerplate will save you from writing 730 lines of code, configuring three files, writing seven scripts in the `package.json` file, and installing 25 packages and dev dependencies.
+- **PATCH** `/api/users/:id/password`
+  - **Input**: `{ currentPassword: string, newPassword: string }`
+  - **Output**: Success message
+  - **Description**: Changes user password
 
-- If you have any queries you can connect with me on [LinkedIn](https://www.linkedin.com/in/md-enayetur-rahman/)
-"# Backend-Boilarplate" 
+## Paraphrase Module
+
+- **POST** `/api/paraphrase`
+  - **Input**: `{ text: string }`
+  - **Output**: `{ paraphrased: string }`
+  - **Description**: Paraphrases text using Hugging Face API
+
+## Polls Module
+
+- **POST** `/api/polls`
+
+  - **Input**: `{ question: string, options: string[] }`
+  - **Output**: `{ id: string }`
+  - **Description**: Creates a new poll and saves to MongoDB
+
+- **GET** `/api/polls/:id`
+
+  - **Output**: `{ question: string, options: { text: string, votes: number }[] }`
+  - **Description**: Retrieves poll details by ID
+
+- **POST** `/api/polls/:id/vote`
+  - **Input**: `{ optionIndex: number }`
+  - **Output**: Updated poll object
+  - **Description**: Records a vote for a specific option
+
+## FaceSwap Module
+
+- **POST** `/api/face-swap`
+  - **Input**: FormData `{ image: File, celebrity: string }`
+  - **Output**: `{ imageUrl: string }`
+  - **Description**: Performs face swap using Replicate API
+
+## Environment Variables Required
+
+- `HUGGING_FACE_API_KEY`: For paraphrase functionality
+- `REPLICATE_API_TOKEN`: For face swap functionality
+- MongoDB connection string (already configured)
+
+## Notes
+
+- All endpoints include proper validation using Zod schemas
+- Error handling is implemented with custom error responses
+- File uploads are handled using Multer middleware
+- All responses follow the standard format: `{ success: boolean, message: string, data: any }`
+- User passwords are automatically hashed using bcrypt
+- Soft delete is implemented for user deletion
